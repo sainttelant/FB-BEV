@@ -10,6 +10,12 @@ import torch.nn.functional as F
 import torch.nn.utils.rnn as rnn_utils
 
 from mmdet.models import DETECTORS
+import sys
+import os
+# path.append root path of project
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../..')))
+
+
 from mmdet3d.models.fbbev.detectors.fbocc import FBOCC, generate_forward_transformation_matrix
 from mmdet3d.models.fbbev.custom_ops.bev_pool_v2 import bev_pool_v2
 from mmdet3d.models.fbbev.custom_ops.grid_sampler import grid_sampler

@@ -11,6 +11,11 @@ from nuscenes.utils.geometry_utils import view_points
 from pyquaternion import Quaternion
 from shapely.geometry import MultiPoint, box
 
+import sys
+import os
+
+# add root path of project
+sys.path.append(os.path.abspath(os.path.join(__file__, '../../..')))
 from mmdet3d.core.bbox import points_cam2img
 from mmdet3d.datasets import NuScenesDataset
 

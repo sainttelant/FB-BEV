@@ -381,7 +381,7 @@ index 1a95bcc..e8e4708 100644
 +++ b/mmdet3d/models/fbbev/custom_ops/bev_pool_v2.py
 @@ -1,6 +1,12 @@
  from torch.autograd import Function
--from third_party.bev_mmdet3d.ops.bev_pool_v2 import bev_pool_v2_gpu
+-from bev_mmdet3d.ops.bev_pool_v2 import bev_pool_v2_gpu
 +from mmdet3d.ops.bev_pool_v2.bev_pool import QuickCumsumCuda
  
 +def bev_pool_v2_gpu(depth, feat, ranks_depth, ranks_feat, ranks_bev,

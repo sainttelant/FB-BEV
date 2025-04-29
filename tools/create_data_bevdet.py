@@ -6,7 +6,7 @@ from nuscenes import NuScenes
 from nuscenes.utils.data_classes import Box
 from pyquaternion import Quaternion
 
-from tools.data_converter import nuscenes_converter as nuscenes_converter
+from data_converter import nuscenes_converter as nuscenes_converter
 
 map_name_from_general_to_detection = {
     'human.pedestrian.adult': 'pedestrian',
