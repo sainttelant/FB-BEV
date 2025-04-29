@@ -12,7 +12,7 @@ from mmcv.runner import (get_dist_info, init_dist, load_checkpoint,
                          wrap_fp16_model)
 
 import mmdet
-from mmdet3d.apis import single_gpu_test, single_gpu_test_trt
+from mmdet3d.apis import single_gpu_test
 from mmdet3d.datasets import build_dataloader, build_dataset
 from mmdet3d.models import build_model
 from mmdet.apis import multi_gpu_test, set_random_seed
@@ -274,6 +274,7 @@ def main():
             model = MMDataParallel(model, device_ids=cfg.gpu_ids)
             outputs = single_gpu_test(model, data_loader, args.show, args.show_dir)
     else:
+        """
         if args.trt_engine is not None:
             raise NotImplementedError("TensorRT inference with Distributed GPU setting is not supported.")
         model = MMDistributedDataParallel(
@@ -281,7 +282,7 @@ def main():
             device_ids=[torch.cuda.current_device()],
             broadcast_buffers=False)
         
-
+        """
         if cfg.get('use_custom_gpu_test', True):
             outputs = custom_multi_gpu_test(model, data_loader, args.tmpdir,
                                  args.gpu_collect)

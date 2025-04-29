@@ -117,7 +117,7 @@ model = dict(
     single_bev_num_channels=numC_Trans,
     readd=True,
     img_backbone=dict(
-        pretrained='ckpts/resnet50-0676ba61.pth',
+        pretrained='ckpts/r50_256x705_depth_pretrain.pth',
         type='ResNet',
         depth=50,
         num_stages=4,
@@ -253,7 +253,7 @@ model = dict(
 dataset_type = 'NuScenesDataset'
 data_root = 'data/nuscenes/'
 file_client_args = dict(backend='disk')
-occupancy_path = '/mount/data/occupancy_cvpr2023/gts'
+occupancy_path = 'data/nuscenes/gts'
 
 
 train_pipeline = [
