@@ -140,9 +140,12 @@ class FBOCC(CenterPoint):
         imgs = img
         B, N, C, imH, imW = imgs.shape
         imgs = imgs.view(B * N, C, imH, imW)
-      
+        if torch.cuda.is_available():
+            imgs = imgs.to('cuda')
+        if imgs.dtype == torch.float16:
+            imgs = imgs.float()
         x = self.img_backbone(imgs)
-       
+
         if self.with_img_neck:
             x = self.img_neck(x)
             if type(x) in [list, tuple]:
@@ -491,9 +494,11 @@ class FBOCC(CenterPoint):
                     'num of augmentations ({}) != num of image meta ({})'.format(
                         len(img_inputs), len(img_metas)))
 
-            if num_augs==1 and not img_metas[0][0].get('tta_config', dict(dist_tta=False))['dist_tta']:
-                return self.simple_test(points[0], img_metas[0], img_inputs[0],
-                                    **kwargs)
+            if num_augs==1 and not img_metas[0].data[0][0].get('tta_config', dict(dist_tta=False))['dist_tta']:
+                # return self.simple_test(points[0], img_metas[0], img_inputs[0],
+                #                     **kwargs)
+                return self.simple_test(points[0], img_metas[0].data[0], img_inputs[0],
+                        **kwargs)
             else:
                 return self.aug_test(points, img_metas, img_inputs, **kwargs)
         
