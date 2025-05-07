@@ -140,13 +140,23 @@ class FBOCC(CenterPoint):
         imgs = img
         B, N, C, imH, imW = imgs.shape
         imgs = imgs.view(B * N, C, imH, imW)
-        if torch.cuda.is_available():
-            imgs = imgs.to('cuda')
-        if imgs.dtype == torch.float16:
-            imgs = imgs.float()
-        x = self.img_backbone(imgs)
 
+        if torch.cuda.is_available():
+            # 将输入移动到GPU并转换为半精度
+            imgs = imgs.to('cuda:0').half()
+
+        # 将模型移动到GPU并转换权重为半精度
+        self.img_backbone = self.img_backbone.to('cuda:0')
+        for module in self.img_backbone.modules():
+            if isinstance(module, torch.nn.Conv2d):
+                module.weight.data = module.weight.data.half()
+
+        x = self.img_backbone(imgs)
         if self.with_img_neck:
+            
+            
+            
+            self.img_neck = self.img_neck.to('cuda:0').half()
             x = self.img_neck(x)
             if type(x) in [list, tuple]:
                 x = x[0]
@@ -494,11 +504,9 @@ class FBOCC(CenterPoint):
                     'num of augmentations ({}) != num of image meta ({})'.format(
                         len(img_inputs), len(img_metas)))
 
-            if num_augs==1 and not img_metas[0].data[0][0].get('tta_config', dict(dist_tta=False))['dist_tta']:
-                # return self.simple_test(points[0], img_metas[0], img_inputs[0],
-                #                     **kwargs)
-                return self.simple_test(points[0], img_metas[0].data[0], img_inputs[0],
-                        **kwargs)
+
+            if num_augs == 1 and not img_metas[0].data[0][0].get('tta_config', dict(dist_tta=False))['dist_tta']:
+                return self.simple_test(points[0], img_metas[0], img_inputs[0], **kwargs)
             else:
                 return self.aug_test(points, img_metas, img_inputs, **kwargs)
         

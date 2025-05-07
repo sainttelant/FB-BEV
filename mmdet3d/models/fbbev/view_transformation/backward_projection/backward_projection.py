@@ -72,6 +72,8 @@ class BackwardProjection(BaseModule):
 
 
         self._init_layers()
+        
+        
 
     def _init_layers(self):
         self.bev_embedding = nn.Embedding(
@@ -101,6 +103,11 @@ class BackwardProjection(BaseModule):
         dtype = mlvl_feats[0].dtype
         bev_queries = self.bev_embedding.weight.to(dtype)
         bev_queries = bev_queries.unsqueeze(1).repeat(1, bs, 1)
+        
+        if torch.cuda.is_available():
+            bev_queries = bev_queries.to('cuda:0')
+            lss_bev = lss_bev.to('cuda:0')
+
         
         if lss_bev is not None:
             lss_bev = lss_bev.flatten(2).permute(2, 0, 1)

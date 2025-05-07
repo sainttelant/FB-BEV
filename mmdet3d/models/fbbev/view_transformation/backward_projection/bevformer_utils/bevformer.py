@@ -17,6 +17,8 @@ from torchvision.transforms.functional import rotate
 from .spatial_cross_attention_depth import DA_MSDeformableAttention
 from mmcv.runner import force_fp32, auto_fp16
 from mmdet.models import  build_neck
+import os
+os.environ['CUDA_LAUNCH_BLOCKING'] = '1'
 
 
 @TRANSFORMER.register_module()

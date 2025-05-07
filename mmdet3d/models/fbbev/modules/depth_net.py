@@ -329,13 +329,17 @@ class CM_DepthNet(BaseModule):
                 stride=1,
                 padding=0))
         self.depth_conv = nn.Sequential(*depth_conv_list)
-
-
-  
+        
+        if torch.cuda.is_available():
+            self.to('cuda:0')
+        
     @force_fp32()
     def forward(self, x, mlp_input):
 
         # if not  x.requires_grad: 
+        if torch.cuda.is_available():
+            mlp_input = mlp_input.to('cuda:0')
+            x = x.to('cuda:0')
         x = x.to(torch.float32) # FIX distill type error
         mlp_input = self.bn(mlp_input.reshape(-1, mlp_input.shape[-1]))
         B, N, C, H, W = x.shape
